@@ -2,26 +2,35 @@
 session_start();
 error_reporting(0);
 include('includes/dbconnection.php');
+if (strlen($_SESSION['bpmsaid']==0)) {
+  header('location:logout.php');
+  } else{
 
-if(isset($_POST['login']))
+if(isset($_POST['submit']))
   {
-    $adminuser=$_POST['username'];
-    $password=md5($_POST['password']);
-    $query=mysqli_query($con,"select ID from tbladmin where  UserName='$adminuser' && Password='$password' ");
-    $ret=mysqli_fetch_array($query);
-    if($ret>0){
-      $_SESSION['bpmsaid']=$ret['ID'];
-      echo "<script type='text/javascript'> document.location ='dashboard.php'; </script>";
-    }
-    else{
-    echo "<script>alert('Invalid Details');</script>";
-    }
+    $sername=$_POST['sername'];
+    $des=$_POST['des'];
+   $cost=$_POST['cost'];
+
+     
+    $query=mysqli_query($con, "insert into  tblservices(ServiceName,Description,Cost) value('$sername','$des','$cost')");
+    if ($query) {
+    	echo "<script>alert('Service has been added.');</script>"; 
+    		echo "<script>window.location.href = 'add-services.php'</script>";   
+    
   }
+  else
+    {
+    echo "<script>alert('Something Went Wrong. Please try again.');</script>";  	
+    }
+
+  
+}
   ?>
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>MSMS | Login Page </title>
+<title>MSMS | Add Services</title>
 
 <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
 <!-- Bootstrap Core CSS -->
@@ -49,47 +58,41 @@ if(isset($_POST['login']))
 <script src="js/metisMenu.min.js"></script>
 <script src="js/custom.js"></script>
 <link href="css/custom.css" rel="stylesheet">
+<script src="http://js.nicedit.com/nicEdit-latest.js" type="text/javascript"></script>
+<script type="text/javascript">bkLib.onDomLoaded(nicEditors.allTextAreas);</script>
 <!--//Metis Menu -->
 </head> 
 <body class="cbp-spmenu-push">
 	<div class="main-content">
-		
+		<!--left-fixed -navigation-->
+		 <?php include_once('includes/sidebar.php');?>
+		<!--left-fixed -navigation-->
+		<!-- header-starts -->
+	 <?php include_once('includes/header.php');?>
+		<!-- //header-ends -->
 		<!-- main content start-->
 		<div id="page-wrapper">
-			<div class="main-page login-page ">
-				<h3 class="title1">SignIn Page</h3>
-				<div class="widget-shadow">
-					<div class="login-top">
-						<h4>Welcome back to MSMS AdminPanel ! </h4>
-					</div>
-					<div class="login-body">
-						<form role="form" method="post" action="">
+			<div class="main-page">
+				<div class="forms">
+					<h3 class="title1">Add Services</h3>
+					<div class="form-grids row widget-shadow" data-example-id="basic-forms"> 
+						<div class="form-title">
+							<h4>Salon Services:</h4>
+						</div>
+						<div class="form-body">
+							<form method="post">
+							 <div class="form-group"> <label>Service Name</label> <input type="text" class="form-control" id="sername" name="sername" placeholder="Service Name" value="" required="true"> </div><div class="form-group"> <label>Description</label> <input class="form-control" name="des" id="des" rows="5" required="true"> </div>
+							  <div class="form-group"> <label>Cost</label> <input type="text" id="cost" name="cost" class="form-control" placeholder="Cost" value="" required="true"> </div>
 							
-							<input type="text" class="user" name="username" placeholder="Username" required="true">
-							<input type="password" name="password" class="lock" placeholder="Password" required="true">
-							<input type="submit" name="login" value="Sign In">
-							<div class="forgot-grid">
-								
-								<div class="forgot">
-									<a href="../index.php">Back to Home</a>
-								</div>
-								<div class="clearfix"> </div>
-							</div>
-							<div class="forgot-grid">
-								
-								<div class="forgot">
-									<a href="forgot-password.php">forgot password?</a>
-								</div>
-								<div class="clearfix"> </div>
-							</div>
-						</form>
+							  <button type="submit" name="submit" class="btn btn-default">Add</button> </form> 
+						</div>
+						
 					</div>
-				</div>
 				
 				
 			</div>
 		</div>
-		
+		 <?php include_once('includes/footer.php');?>
 	</div>
 	<!-- Classie -->
 		<script src="js/classie.js"></script>
@@ -119,3 +122,4 @@ if(isset($_POST['login']))
    <script src="js/bootstrap.js"> </script>
 </body>
 </html>
+<?php } ?>

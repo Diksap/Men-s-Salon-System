@@ -3,25 +3,29 @@ session_start();
 error_reporting(0);
 include('includes/dbconnection.php');
 
-if(isset($_POST['login']))
+if(isset($_POST['submit']))
   {
-    $adminuser=$_POST['username'];
-    $password=md5($_POST['password']);
-    $query=mysqli_query($con,"select ID from tbladmin where  UserName='$adminuser' && Password='$password' ");
+    $contactno=$_POST['contactno'];
+    $email=$_POST['email'];
+
+        $query=mysqli_query($con,"select ID from tbladmin where  Email='$email' and MobileNumber='$contactno' ");
     $ret=mysqli_fetch_array($query);
     if($ret>0){
-      $_SESSION['bpmsaid']=$ret['ID'];
-      echo "<script type='text/javascript'> document.location ='dashboard.php'; </script>";
+      $_SESSION['contactno']=$contactno;
+      $_SESSION['email']=$email;
+    
+      echo "<script type='text/javascript'> document.location ='reset-password.php'; </script>";
     }
     else{
-    echo "<script>alert('Invalid Details');</script>";
+      
+         echo "<script>alert('Invalid Details. Please try again');</script>";
     }
   }
   ?>
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>MSMS | Login Page </title>
+<title>MSMS | Forgot Page </title>
 
 <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
 <!-- Bootstrap Core CSS -->
@@ -57,28 +61,23 @@ if(isset($_POST['login']))
 		<!-- main content start-->
 		<div id="page-wrapper">
 			<div class="main-page login-page ">
-				<h3 class="title1">SignIn Page</h3>
+				<h3 class="title1">Forgot Page</h3>
 				<div class="widget-shadow">
 					<div class="login-top">
-						<h4>Welcome back to MSMS AdminPanel ! </h4>
+						<h4>Forgot Password Reset It ! </h4>
 					</div>
 					<div class="login-body">
 						<form role="form" method="post" action="">
 							
-							<input type="text" class="user" name="username" placeholder="Username" required="true">
-							<input type="password" name="password" class="lock" placeholder="Password" required="true">
-							<input type="submit" name="login" value="Sign In">
+							<input type="text" name="email" class="lock" placeholder="Email" required="true">
+							
+							<input type="text" name="contactno" class="lock" placeholder="Mobile Number" required="true" maxlength="10" pattern="[0-9]+">
+							
+							<input type="submit" name="submit" value="Reset">
 							<div class="forgot-grid">
 								
 								<div class="forgot">
-									<a href="../index.php">Back to Home</a>
-								</div>
-								<div class="clearfix"> </div>
-							</div>
-							<div class="forgot-grid">
-								
-								<div class="forgot">
-									<a href="forgot-password.php">forgot password?</a>
+									<a href="index.php">Already have an account</a>
 								</div>
 								<div class="clearfix"> </div>
 							</div>
